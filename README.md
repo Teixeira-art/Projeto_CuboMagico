@@ -1,1 +1,1 @@
-# Projeto-cubo-m-gico
+# Projeto-CuboMagico
