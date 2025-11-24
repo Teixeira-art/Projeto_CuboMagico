@@ -1,3 +1,4 @@
+
 // Motor de passo 28BYJ-48 + ULN2003 na ESP32 DevKit v1
 // Controle via Serial: G = girar, P = parar
 
@@ -42,7 +43,7 @@ void giraHorario() {
 }
 
 void giraAntiHorario(){
-   passoAtual = 7;
+   passoAtual--;
    if(passoAtual < 0) passoAtual = 7;
    aplicaPasso(passoAtual);
    delay(tempoPasso);
