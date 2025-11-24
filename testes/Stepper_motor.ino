@@ -12,8 +12,8 @@ int tempoPasso = 1;
 // índice do passo atual
 int passoAtual = 0;
 
-// flag de controle (1 = girando, 0 = parado)
-bool girando = false;
+// variavel de controle (2 = girando horario, 1 = girando anti-horario, 0 = parado)
+int girando = 0;
 
 // Sequência de meio-passo (8 etapas)
 int sequencia[8][4] = {
@@ -41,6 +41,13 @@ void giraHorario() {
   delay(tempoPasso);
 }
 
+void giraAntiHorario(){
+   passoAtual = 7;
+   if(passoAtual < 0) passoAtual = 0;
+   aplicaPasso(passoAtual);
+   ddelay(tempoPasso);
+}
+
 void desligaBobinas() {
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, LOW);
@@ -64,10 +71,16 @@ void loop() {
   if (Serial.available() > 0) {
     char comando = Serial.read();
 
-    if (comando == 'G' || comando == 'g') {
-      girando = true;
-      Serial.println("Girando motor...");
+    if (comando == 'G2' || comando == 'g2') {
+      girando = 2;
+      Serial.println("Girando motor no sentido horário...");
     }
+
+    if (comando == 'G1' || comando == 'g1') {
+      girando = 1;
+      Serial.println("Girando motor no sentido anti-horário...");
+    }
+
     else if (comando == 'P' || comando == 'p') {
       girando = false;
       desligaBobinas();
@@ -76,7 +89,10 @@ void loop() {
   }
 
   // se estiver girando, executa os passos
-  if (girando) {
+  if (girando = 2) {
     giraHorario();
+  }
+  if (girando = 1) {
+    giraAntiHorario();
   }
 }
