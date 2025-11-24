@@ -43,9 +43,9 @@ void giraHorario() {
 
 void giraAntiHorario(){
    passoAtual = 7;
-   if(passoAtual < 0) passoAtual = 0;
+   if(passoAtual < 0) passoAtual = 7;
    aplicaPasso(passoAtual);
-   ddelay(tempoPasso);
+   delay(tempoPasso);
 }
 
 void desligaBobinas() {
@@ -71,12 +71,12 @@ void loop() {
   if (Serial.available() > 0) {
     char comando = Serial.read();
 
-    if (comando == 'G2' || comando == 'g2') {
+    if (comando == 'H' || comando == 'h') {
       girando = 2;
       Serial.println("Girando motor no sentido horário...");
     }
 
-    if (comando == 'G1' || comando == 'g1') {
+    if (comando == 'A' || comando == 'a') {
       girando = 1;
       Serial.println("Girando motor no sentido anti-horário...");
     }
@@ -89,10 +89,10 @@ void loop() {
   }
 
   // se estiver girando, executa os passos
-  if (girando = 2) {
+  if (girando == 2) {
     giraHorario();
   }
-  if (girando = 1) {
+  if (girando == 1) {
     giraAntiHorario();
   }
 }
