@@ -49,7 +49,7 @@ while True:
             if r >= 100 and g >= 100 and b >= 110: 
                 corFinal = 'U' #Branco
             elif r >= 100 and g >= 100 and b <= 80:
-                corFinal = 'B' #Amarelo
+                corFinal = 'D' #Amarelo
             elif r >= 140 and g >= 65 and g < 140 and b <= 80:
                 corFinal = 'L' #Laranja
             elif np.argmax(cor) == 0:
