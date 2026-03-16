@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import kociemba
 
 cam = cv2.VideoCapture(0)
 corChange = ''
@@ -60,6 +61,8 @@ while True:
                 corFinal = 'B' #Azul
 
             cube_side = cube_side + corFinal
+    
+    cv2.imshow('Img', img)
 
     key = cv2.waitKey(10) & 0xFF
 
@@ -73,8 +76,9 @@ while True:
         print("Cubo completo!")
         break
 
-    cv2.imshow('Img', img)
-
 
 print("Scramble:" + cubo)
 
+sol = kociemba.solve(cubo)
+
+print("Solution:" + sol)
