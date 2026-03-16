@@ -1,22 +1,15 @@
-
 // Motor de passo 28BYJ-48 + ULN2003 na ESP32 DevKit v1
-// Controle via Serial: G = girar, P = parar
+// Controle via Serial: H = 90 horario, A = 90 anti-horario, D = 180, P = parar
 
 const int IN1 = 12;
 const int IN2 = 14;
 const int IN3 = 27;
 const int IN4 = 26;
 
-// tempo entre cada meio-passo (menor = mais rápido)
 int tempoPasso = 1;
-
-// índice do passo atual
 int passoAtual = 0;
-
-// variavel de controle (2 = girando horario, 1 = girando anti-horario, 0 = parado)
 int girando = 0;
 
-// Sequência de meio-passo (8 etapas)
 int sequencia[8][4] = {
   {1, 0, 0, 0},
   {1, 1, 0, 0},
@@ -35,25 +28,41 @@ void aplicaPasso(int idx) {
   digitalWrite(IN4, sequencia[idx][3]);
 }
 
-void giraHorario() {
-  passoAtual++;
-  if (passoAtual > 7) passoAtual = 0;
-  aplicaPasso(passoAtual);
-  delay(tempoPasso);
-}
-
-void giraAntiHorario(){
-   passoAtual--;
-   if(passoAtual < 0) passoAtual = 7;
-   aplicaPasso(passoAtual);
-   delay(tempoPasso);
-}
-
 void desligaBobinas() {
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, LOW);
   digitalWrite(IN3, LOW);
   digitalWrite(IN4, LOW);
+}
+
+void giraHorario() {
+  for (int i = 0; i < 1024; i++) {
+    passoAtual++;
+    if (passoAtual > 7) passoAtual = 0;
+    aplicaPasso(passoAtual);
+    delay(tempoPasso);
+  }
+  desligaBobinas();
+}
+
+void giraAntiHorario() {
+  for (int i = 0; i < 1024; i++) {
+    passoAtual--;
+    if (passoAtual < 0) passoAtual = 7;
+    aplicaPasso(passoAtual);
+    delay(tempoPasso);
+  }
+  desligaBobinas();
+}
+
+void giraDuplo() {
+  for (int i = 0; i < 2048; i++) {
+    passoAtual++;
+    if (passoAtual > 7) passoAtual = 0;
+    aplicaPasso(passoAtual);
+    delay(tempoPasso);
+  }
+  desligaBobinas();
 }
 
 void setup() {
@@ -64,36 +73,42 @@ void setup() {
   pinMode(IN4, OUTPUT);
 
   desligaBobinas();
-  Serial.println("Digite 'G' para girar e 'P' para parar.");
+  Serial.println("Digite 'H' para 90 horario, 'A' para 90 anti-horario, 'D' para 180 e 'P' para parar.");
 }
 
 void loop() {
-  // verifica se tem algo digitado no monitor serial
   if (Serial.available() > 0) {
     char comando = Serial.read();
 
     if (comando == 'H' || comando == 'h') {
+      girando = 3;
+      Serial.println("Girando 90 graus no sentido horario...");
+    }
+    else if (comando == 'A' || comando == 'a') {
       girando = 2;
-      Serial.println("Girando motor no sentido horário...");
+      Serial.println("Girando 90 graus no sentido anti-horario...");
     }
-
-    if (comando == 'A' || comando == 'a') {
+    else if (comando == 'D' || comando == 'd') {
       girando = 1;
-      Serial.println("Girando motor no sentido anti-horário...");
+      Serial.println("Girando 180 graus...");
     }
-
     else if (comando == 'P' || comando == 'p') {
-      girando = false;
+      girando = 0;
       desligaBobinas();
       Serial.println("Motor parado.");
     }
   }
 
-  // se estiver girando, executa os passos
-  if (girando == 2) {
+  if (girando == 3) {
     giraHorario();
+    girando = 0;
   }
-  if (girando == 1) {
+  else if (girando == 2) {
     giraAntiHorario();
+    girando = 0;
+  }
+  else if (girando == 1) {
+    giraDuplo();
+    girando = 0;
   }
 }
