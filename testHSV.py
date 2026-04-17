@@ -51,7 +51,7 @@ while True:
 
             centro = piece[margem_y:ph - margem_y, margem_x:pw - margem_x]
 
-            # desenhar a área central usada na leitura
+            # desenhar a área central
             cx1 = xx1 + margem_x
             cy1 = yy1 + margem_y
             cx2 = xx2 - margem_x
@@ -84,11 +84,10 @@ while True:
                 corFinal = 'B'  # Azul
 
             else:
-                corFinal = '?'  # caso não reconheça bem
+                corFinal = '?' 
 
             cube_side += corFinal
 
-            # mostrar a letra detectada na tela
             cv2.putText(img, corFinal, (xx1 + 10, yy1 + 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
 
     cv2.imshow('Img', img)
@@ -105,6 +104,14 @@ while True:
         break
 
 cam.release()
+
+#Garantir a cor correta na peça central
+cubo = cubo[:4] + "U" + cubo[5:]   #Branco
+cubo = cubo[:13] + "R" + cubo[14:] #Vermelho
+cubo = cubo[:22] + "F" + cubo[23:] #Verde
+cubo = cubo[:31] + "D" + cubo[32:] #Amarelo
+cubo = cubo[:40] + "L" + cubo[41:] #Laranja
+cubo = cubo[:49] + "B" + cubo[50:] #Azul
 
 print("Cube string:", cubo)
 
