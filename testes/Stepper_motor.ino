@@ -73,7 +73,7 @@ void setup() {
   pinMode(IN4, OUTPUT);
 
   desligaBobinas();
-  Serial.println("Digite 'H' para 90 horario, 'A' para 90 anti-horario, 'D' para 180 e 'P' para parar.");
+  Serial.println("Digite 'H' para 90° horario, 'A' para 90° anti-horario, 'D' para 180°");
 }
 
 void loop() {
@@ -81,34 +81,17 @@ void loop() {
     char comando = Serial.read();
 
     if (comando == 'H' || comando == 'h') {
-      girando = 3;
+      giraHorario();
       Serial.println("Girando 90 graus no sentido horario...");
     }
     else if (comando == 'A' || comando == 'a') {
-      girando = 2;
+      giraAntiHorario();
       Serial.println("Girando 90 graus no sentido anti-horario...");
     }
     else if (comando == 'D' || comando == 'd') {
-      girando = 1;
+      giraDuplo();
       Serial.println("Girando 180 graus...");
-    }
-    else if (comando == 'P' || comando == 'p') {
-      girando = 0;
-      desligaBobinas();
-      Serial.println("Motor parado.");
     }
   }
 
-  if (girando == 3) {
-    giraHorario();
-    girando = 0;
-  }
-  else if (girando == 2) {
-    giraAntiHorario();
-    girando = 0;
-  }
-  else if (girando == 1) {
-    giraDuplo();
-    girando = 0;
-  }
 }
